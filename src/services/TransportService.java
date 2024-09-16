@@ -36,7 +36,7 @@ public class TransportService {
 
         if (transportOpt.isPresent()) {
             Transport transport = transportOpt.get();
-            System.out.println("Transport ID: " + transport.getId());
+            System.out.println("Transport ID: " + id);
             System.out.println("Consommation: " + transport.getConsumption());
             System.out.println("Date de début: " + transport.getStartDate());
             System.out.println("Date de fin: " + transport.getEndDate());

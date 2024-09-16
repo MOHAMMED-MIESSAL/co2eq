@@ -1,29 +1,27 @@
 package repositories;
 
-
 import config.DatabaseConnection;
+import enums.AlimentType;
 import enums.ConsumptionType;
-import enums.VehiculeType;
-import models.Transport;
+import enums.EnergyType;
+import models.Alimentation;
 
-import java.util.Optional;
+
 import java.sql.*;
+import java.util.Optional;
 
-
-public class TransportRepository {
-
+public class AlimentationRepository {
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
     }
 
-    public boolean addTransport(Transport transport) {
+    public boolean addAlimentation(Alimentation alimentation) {
         String insertConsumptionSql = "INSERT INTO consumptions (consumption, start_date, end_date, type, user_id) VALUES (?, ?, ?, ?::consumption_type, ?) RETURNING id";
-        String insertTransportSql = "INSERT INTO transport (id, distance_parcourue, type_de_vehicule) VALUES (?, ?, ?::vehicle_type)";
-
+        String insertAlimentationSql = "INSERT INTO alimentation (id, weight, aliment_type) VALUES (?,?,?::aliment_type)";
         try (Connection conn = getConnection();
              PreparedStatement pstmtConsumption = conn.prepareStatement(insertConsumptionSql);
-             PreparedStatement pstmtTransport = conn.prepareStatement(insertTransportSql)) {
+             PreparedStatement pstmtAlimentation = conn.prepareStatement(insertAlimentationSql)) {
 
             // Obtenir le dernier ID à l'aide de la même connexion
             String getLastIdSql = "SELECT MAX(id) AS max_id FROM consumptions";
@@ -33,15 +31,15 @@ public class TransportRepository {
                 if (rs.next()) {
                     newId = rs.getInt("max_id") + 1;
                 }
-                transport.setId(newId);
+                alimentation.setId(newId);
             }
 
             // Insertion dans la table des consommations
-            pstmtConsumption.setDouble(1, transport.getConsumption());
-            pstmtConsumption.setObject(2, transport.getStartDate());
-            pstmtConsumption.setObject(3, transport.getEndDate());
-            pstmtConsumption.setString(4, transport.getConsumptionType().name());
-            pstmtConsumption.setString(5, transport.getUserId());
+            pstmtConsumption.setDouble(1, alimentation.getConsumption());
+            pstmtConsumption.setObject(2, alimentation.getStartDate());
+            pstmtConsumption.setObject(3, alimentation.getEndDate());
+            pstmtConsumption.setString(4, alimentation.getConsumptionType().name());
+            pstmtConsumption.setString(5, alimentation.getUserId());
 
             // Exécuter la requête et récupérer l'ID généré
             ResultSet generatedKeys = pstmtConsumption.executeQuery();
@@ -49,26 +47,26 @@ public class TransportRepository {
                 System.out.println("Erreur : Aucun ID généré pour la consommation.");
                 return false;
             }
-            transport.setId(generatedKeys.getInt(1));
+            alimentation.setId(generatedKeys.getInt(1));
 
             // Insertion dans la table des transports
-            pstmtTransport.setInt(1, transport.getId());
-            pstmtTransport.setDouble(2, transport.getDistanceParcourue());
-            pstmtTransport.setString(3, transport.getTypeDeVehicule().name());
+            pstmtAlimentation.setInt(1, alimentation.getId());
+            pstmtAlimentation.setDouble(2, alimentation.getWeight());
+            pstmtAlimentation.setString(3, alimentation.getAlimentType().name());
 
-            int rowsAffectedTransport = pstmtTransport.executeUpdate();
-            System.out.println("Consommation Transport ajoutée avec succès !");
-            return rowsAffectedTransport > 0;
+            int rowsAffectedAlimentation = pstmtAlimentation.executeUpdate();
+            System.out.println("Consommation Logement ajoutée avec succès !");
+            return rowsAffectedAlimentation > 0;
 
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du transport: " + e.getMessage());
+            System.out.println("Erreur lors de l'ajout du logement: " + e.getMessage());
             return false;
         }
     }
 
-    public Optional<Transport> getTransportById(int id) {
-        String sql = "SELECT c.id, c.consumption, c.start_date, c.end_date, c.type, c.user_id, t.distance_parcourue, t.type_de_vehicule " +
-                "FROM consumptions c JOIN transport t ON c.id = t.id WHERE c.id = ?";
+    public Optional<Alimentation> getAlimentationById(int id) {
+        String sql = "SELECT c.id, c.consumption, c.start_date, c.end_date, c.type, c.user_id, a.weight, a.aliment_type " +
+                "FROM consumptions c JOIN alimentation a ON c.id = a.id WHERE c.id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -77,75 +75,75 @@ public class TransportRepository {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                Transport transport = new Transport(
-//                        rs.getInt("id"),
+                Alimentation alimentation = new Alimentation(
                         rs.getDouble("consumption"),
                         rs.getTimestamp("start_date").toLocalDateTime(),
                         rs.getTimestamp("end_date").toLocalDateTime(),
                         ConsumptionType.valueOf(rs.getString("type")),
                         rs.getString("user_id"),
-                        rs.getInt("distance_parcourue"),
-                        VehiculeType.valueOf(rs.getString("type_de_vehicule"))
+                        AlimentType.valueOf(rs.getString("aliment_type")),
+                        rs.getDouble("weight")
                 );
-                return Optional.of(transport);
+                return Optional.of(alimentation);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération du transport: " + e.getMessage());
+            System.out.println("Erreur lors de la récupération du alimentation: " + e.getMessage());
         }
         return Optional.empty();
     }
 
-    public boolean updateTransport(int id, Transport transport) {
+
+    public boolean updateAlimentation(int id, Alimentation alimentation) {
         String updateConsumptionSql = "UPDATE consumptions SET consumption = ?, start_date = ?, end_date = ?, type = ?::consumption_type, user_id = ? WHERE id = ?";
-        String updateTransportSql = "UPDATE transport SET distance_parcourue = ?, type_de_vehicule = ?::vehicle_type WHERE id = ?";
+        String updateAlimentationSql = "UPDATE alimentation SET weight = ?, aliment_type = ?::aliment_type WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmtConsumption = conn.prepareStatement(updateConsumptionSql);
-             PreparedStatement pstmtTransport = conn.prepareStatement(updateTransportSql)) {
+             PreparedStatement pstmtAlimentation = conn.prepareStatement(updateAlimentationSql)) {
 
             // Mise à jour de la table des consommations
-            pstmtConsumption.setDouble(1, transport.getConsumption());
-            pstmtConsumption.setObject(2, transport.getStartDate());
-            pstmtConsumption.setObject(3, transport.getEndDate());
-            pstmtConsumption.setString(4, transport.getConsumptionType().name());
-            pstmtConsumption.setString(5, transport.getUserId());
+            pstmtConsumption.setDouble(1, alimentation.getConsumption());
+            pstmtConsumption.setObject(2, alimentation.getStartDate());
+            pstmtConsumption.setObject(3, alimentation.getEndDate());
+            pstmtConsumption.setString(4, alimentation.getConsumptionType().name());
+            pstmtConsumption.setString(5, alimentation.getUserId());
             pstmtConsumption.setInt(6, id);  // Utilisation du paramètre id pour la mise à jour
 
             int rowsAffectedConsumption = pstmtConsumption.executeUpdate();
 
             // Mise à jour de la table des transports
-            pstmtTransport.setDouble(1, transport.getDistanceParcourue());
-            pstmtTransport.setString(2, transport.getTypeDeVehicule().name());
-            pstmtTransport.setInt(3, id);  // Utilisation du paramètre id pour la mise à jour
+            pstmtAlimentation.setDouble(1, alimentation.getWeight());
+            pstmtAlimentation.setString(2, alimentation.getAlimentType().name());
+            pstmtAlimentation.setInt(3, id);  // Utilisation du paramètre id pour la mise à jour
 
-            int rowsAffectedTransport = pstmtTransport.executeUpdate();
+            int rowsAffectedTransport = pstmtAlimentation.executeUpdate();
 
             System.out.println("Enregistrement modifier avec succes !");
             return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
 
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour du transport: " + e.getMessage());
+            System.out.println("Erreur lors de la mise à jour du logement: " + e.getMessage());
             return false;
         }
     }
 
-    public boolean deleteTransport(int id) {
+    public boolean deleteAlimentation(int id) {
         String checkTypeSql = "SELECT type FROM consumptions WHERE id = ?";
         String deleteConsumptionSql = "DELETE FROM consumptions WHERE id = ?";
-        String deleteTransportSql = "DELETE FROM transport WHERE id = ?";
+        String deleteAlimentationSql = "DELETE FROM alimentation WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement pstmtCheckType = conn.prepareStatement(checkTypeSql);
              PreparedStatement pstmtConsumption = conn.prepareStatement(deleteConsumptionSql);
-             PreparedStatement pstmtTransport = conn.prepareStatement(deleteTransportSql)) {
+             PreparedStatement pstmtLogement = conn.prepareStatement(deleteAlimentationSql)) {
 
-            // Vérifier si le type de consommation est bien TRANSPORT
+            // Vérifier si le type de consommation est bien ALIMENTATION
             pstmtCheckType.setInt(1, id);
             ResultSet rs = pstmtCheckType.executeQuery();
             if (rs.next()) {
                 String type = rs.getString("type");
-                if (!type.equalsIgnoreCase("TRANSPORT")) {
-                    System.out.println("Erreur : Le type de consommation n'est pas TRANSPORT.");
+                if (!type.equalsIgnoreCase("ALIMENTATION")) {
+                    System.out.println("Erreur : Le type de consommation n'est pas ALIMENTATION.");
                     return false;
                 }
             } else {
@@ -153,21 +151,20 @@ public class TransportRepository {
                 return false;
             }
 
-            // Supprimer l'enregistrement dans la table des transports
-            pstmtTransport.setInt(1, id);
-            int rowsAffectedTransport = pstmtTransport.executeUpdate();
+            // Supprimer l'enregistrement dans la table des logements
+            pstmtLogement.setInt(1, id);
+            int rowsAffectedLogement = pstmtLogement.executeUpdate();
 
             // Supprimer l'enregistrement dans la table des consommations
             pstmtConsumption.setInt(1, id);
             int rowsAffectedConsumption = pstmtConsumption.executeUpdate();
 
             System.out.println("Enregistrement supprimé avec succès !");
-            return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
+            return rowsAffectedConsumption > 0 && rowsAffectedLogement > 0;
 
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression du transport: " + e.getMessage());
+            System.out.println("Erreur lors de la suppression du alimentation: " + e.getMessage());
             return false;
         }
     }
-
 }

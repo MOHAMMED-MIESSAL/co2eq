@@ -1,6 +1,12 @@
+import enums.AlimentType;
 import enums.ConsumptionType;
+import enums.EnergyType;
 import enums.VehiculeType;
+import models.Alimentation;
+import models.Logement;
 import models.Transport;
+import services.AlimentationService;
+import services.LogementService;
 import services.TransportService;
 import services.UserService;
 
@@ -31,7 +37,7 @@ public class Main {
 //        VehiculeType typeDeVehicule = VehiculeType.TRAIN;  // Type de véhicule
 //
 //        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
-//        Transport transport = new Transport(0, consumption, startDate, endDate, consumptionType, userId, distanceParcourue, typeDeVehicule);
+//        Transport transport = new Transport(consumption, startDate, endDate, consumptionType, userId, distanceParcourue, typeDeVehicule);
 
 
 //        //     Définir les données pour un transport
@@ -46,11 +52,62 @@ public class Main {
 //        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
 //        Transport Updatedtransport = new Transport(0, Updatedconsumption, UpdatedstartDate, UpdatedendDate, UpdatedconsumptionType, UpdateduserId, UpdateddistanceParcourue, UpdatedtypeDeVehicule);
 
-        TransportService transportService = new TransportService();
+//        TransportService transportService = new TransportService();
 //        transportService.addTransport(transport);
 //        transportService.updateTransport(1, Updatedtransport);
-//        transportService.deleteTransport(1);
+//        transportService.deleteTransport(2);
 //        transportService.displayTransportById(2);
 
+//      //   Définir les données pour un transport
+//        double Updateconsumption = 290;
+//        LocalDateTime UpdatestartDate = LocalDateTime.of(2024, 9, 13, 10, 0);
+//        LocalDateTime UpdateendDate = LocalDateTime.of(2024, 9, 13, 15, 0);
+//        ConsumptionType UpdateconsumptionType = ConsumptionType.LOGEMENT;
+//        String userId = "USER123";  // Exemple d'ID utilisateur
+//        double Updateconsommation_energie = 900;  // Distance parcourue
+//        EnergyType UpdatetypeEnergy = EnergyType.GAZ;  // Type de véhicule
+////
+////        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
+//        Logement Updatelogement = new Logement(Updateconsumption, UpdatestartDate, UpdateendDate, UpdateconsumptionType, userId, Updateconsommation_energie, UpdatetypeEnergy);
+
+//        TransportService transportService = new TransportService();
+//        transportService.addTransport(transport);
+//        transportService.updateTransport(1, Updatedtransport);
+//        transportService.deleteTransport(5);
+//        transportService.displayTransportById(2);
+
+//       LogementService logementService = new LogementService();
+//        logementService.addLogement(Updatelogement);
+//        logementService.updateLogement(2, Updatelogement);
+//        logementService.displayLogementById(7);
+
+
+//        // Définir les données pour un alimentation
+//        double consumption = 126.34;
+//        LocalDateTime startDate = LocalDateTime.of(2024, 12, 12, 12, 12);
+//        LocalDateTime endDate = LocalDateTime.of(2024, 12, 19, 12, 12);
+//        ConsumptionType consumptionType = ConsumptionType.ALIMENTATION;
+//        String userId = "USER123";  // Exemple d'ID utilisateur
+//        double weight = 18.7;  // Distance parcourue
+//        AlimentType alimentation_type = AlimentType.LEGUME;  // Type de véhicule
+//
+//        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
+//        Alimentation alimentation = new Alimentation(consumption, startDate, endDate, consumptionType, userId, alimentation_type, weight);
+
+//        double Updateconsumption = 12.12;
+//        LocalDateTime UpdatestartDate = LocalDateTime.of(2024, 12, 12, 12, 12);
+//        LocalDateTime UpdateendDate = LocalDateTime.of(2024, 12, 19, 12, 12);
+//        ConsumptionType UpdateconsumptionType = ConsumptionType.ALIMENTATION;
+//        String userId = "USER123";  // Exemple d'ID utilisateur
+//        double Updateweight = 500;  // Distance parcourue
+//        AlimentType Updatealimentation_type = AlimentType.VIANDE;  // Type de véhicule
+//
+//        Alimentation updateAlimentation = new Alimentation(Updateconsumption, UpdatestartDate, UpdateendDate, UpdateconsumptionType, userId, Updatealimentation_type, Updateweight);
+
+//        AlimentationService alimentationService = new AlimentationService();
+//        alimentationService.addAlimentation(alimentation);
+//        alimentationService.updateAlimentation(8,updateAlimentation);
+//          alimentationService.deleteAlimentation(9);
+//        alimentationService.displayAlimentationById(9);
     }
 }

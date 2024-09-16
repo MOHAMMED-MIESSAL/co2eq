@@ -11,9 +11,9 @@ public class Transport extends Consumption {
     private int distanceParcourue;
     private VehiculeType typeDeVehicule;
 
-    public Transport(int id,double consumption, LocalDateTime startDate, LocalDateTime endDate, ConsumptionType consumptionType, String userId, int distanceParcourue, VehiculeType typeDeVehicule) {
+    public Transport(double consumption, LocalDateTime startDate, LocalDateTime endDate, ConsumptionType consumptionType, String userId, int distanceParcourue, VehiculeType typeDeVehicule) {
         super(consumption, startDate, endDate, consumptionType, userId);
-        this.id = id;
+//        this.id = id;
         this.distanceParcourue = distanceParcourue;
         this.typeDeVehicule = typeDeVehicule;
     }

@@ -6,6 +6,7 @@ import enums.ConsumptionType;
 import java.time.LocalDateTime;
 
 public class Alimentation extends Consumption {
+    int id;
     private double weight;
     private AlimentType alimentType;
 
@@ -14,6 +15,30 @@ public class Alimentation extends Consumption {
         this.alimentType = alimentType;
         this.weight = weight;
     }
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public AlimentType getAlimentType() {
+        return alimentType;
+    }
+    public void setAlimentType(AlimentType alimentType) {
+        this.alimentType = alimentType;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+
+
 
     @Override
     public double calculImpact() {
@@ -50,19 +75,5 @@ public class Alimentation extends Consumption {
         super.setStartDate(startDate);
     }
 
-    public AlimentType getAlimentType() {
-        return alimentType;
-    }
 
-    public void setAlimentType(AlimentType alimentType) {
-        this.alimentType = alimentType;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(double weight) {
-        this.weight = weight;
-    }
 }
