@@ -2,68 +2,50 @@ package services;
 
 import models.Transport;
 import repositories.TransportRepository;
-import enums.ConsumptionType;
-import enums.VehiculeType;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TransportService {
-    private TransportRepository transportRepository;
+    private final TransportRepository transportRepository;
 
     public TransportService() {
         this.transportRepository = new TransportRepository();
     }
 
-    public boolean addTransport(double consumption, LocalDateTime startDate, LocalDateTime endDate,
-                                ConsumptionType consumptionType, String userId, double distanceParcourue,
-                                VehiculeType typeDeVehicule)
-    {
-        // Créer un objet Transport sans ID
-        Transport transport = new Transport(consumption, startDate, endDate, consumptionType, userId, distanceParcourue, typeDeVehicule);
+    // Méthode pour ajouter un transport
+    public boolean addTransport(Transport transport) {
         return transportRepository.addTransport(transport);
     }
 
-    public boolean updateTransport(int id, double newConsumption, LocalDateTime newStartDate,
-                                   LocalDateTime newEndDate, ConsumptionType newConsumptionType,
-                                   String newUserId, double newDistanceParcourue, VehiculeType newTypeDeVehicule) {
-        Optional<Transport> optionalTransport = transportRepository.findTransportById(id);
-        if (optionalTransport.isPresent()) {
-            Transport transport = optionalTransport.get();
-            transport.setConsumption(newConsumption);
-            transport.setStartDate(newStartDate);
-            transport.setEndDate(newEndDate);
-            transport.setConsumptionType(newConsumptionType);
-            transport.setUserId(newUserId);
-            transport.setDistanceParcourue(newDistanceParcourue);
-            transport.setTypeDeVehicule(newTypeDeVehicule);
-            return transportRepository.updateTransport(transport);
-        } else {
-            System.out.println("Transport non trouvé.");
-            return false;
-        }
+    // Méthode pour récupérer un transport par ID
+   public Optional<Transport> getTransportById(int id) {
+        return transportRepository.getTransportById(id);
+   }
+
+    // Méthode pour mettre à jour un transport
+    public boolean updateTransport(int id ,Transport transport) {
+        return transportRepository.updateTransport(id,transport);
     }
 
-    public boolean removeTransport(int id) {
+    public boolean deleteTransport(int id) {
         return transportRepository.deleteTransport(id);
     }
 
-    public void displayTransport(int id) {
-        Optional<Transport> optionalTransport = transportRepository.findTransportById(id);
-        optionalTransport.ifPresentOrElse(
-                transport -> System.out.println("ID: " + transport.getId() +
-                        "\tConsumption: " + transport.getConsumption() +
-                        "\tStart Date: " + transport.getStartDate() +
-                        "\tEnd Date: " + transport.getEndDate() +
-                        "\tType: " + transport.getConsumptionType() +
-                        "\tUser ID: " + transport.getUserId() +
-                        "\tDistance: " + transport.getDistanceParcourue() +
-                        "\tVehicle Type: " + transport.getTypeDeVehicule()),
-                () -> System.out.println("Transport non trouvé.")
-        );
-    }
+    public void displayTransportById(int id) {
+        Optional<Transport> transportOpt = transportRepository.getTransportById(id);
 
-    public boolean transportExists(int id) {
-        return transportRepository.findTransportById(id).isPresent();
+        if (transportOpt.isPresent()) {
+            Transport transport = transportOpt.get();
+            System.out.println("Transport ID: " + transport.getId());
+            System.out.println("Consommation: " + transport.getConsumption());
+            System.out.println("Date de début: " + transport.getStartDate());
+            System.out.println("Date de fin: " + transport.getEndDate());
+            System.out.println("Type de consommation: " + transport.getConsumptionType());
+            System.out.println("ID utilisateur: " + transport.getUserId());
+            System.out.println("Distance parcourue: " + transport.getDistanceParcourue());
+            System.out.println("Type de véhicule: " + transport.getTypeDeVehicule());
+        } else {
+            System.out.println("Transport non trouvé pour l'ID: " + id);
+        }
     }
 }

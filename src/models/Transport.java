@@ -7,32 +7,40 @@ import enums.VehiculeType;
 
 public class Transport extends Consumption {
 
-    private int id; // Ajoutez cet attribut pour stocker l'ID
-    private double distanceParcourue;
+    private int id;
+    private int distanceParcourue;
     private VehiculeType typeDeVehicule;
 
-    public Transport(double consumption, LocalDateTime startDate, LocalDateTime endDate, ConsumptionType consumptionType, String userId, double distanceParcourue, VehiculeType typeDeVehicule) {
-        super(consumption, startDate, endDate, consumptionType, userId);
-        this.distanceParcourue = distanceParcourue;
-        this.typeDeVehicule = typeDeVehicule;
-    }
-
-    public Transport(int id, double consumption, LocalDateTime startDate, LocalDateTime endDate, ConsumptionType consumptionType, String userId, double distanceParcourue, VehiculeType typeDeVehicule) {
+    public Transport(int id,double consumption, LocalDateTime startDate, LocalDateTime endDate, ConsumptionType consumptionType, String userId, int distanceParcourue, VehiculeType typeDeVehicule) {
         super(consumption, startDate, endDate, consumptionType, userId);
         this.id = id;
         this.distanceParcourue = distanceParcourue;
         this.typeDeVehicule = typeDeVehicule;
     }
 
-    // Getter pour ID
+
+    // Getters & Setters :
+    public double getDistanceParcourue() {
+        return distanceParcourue;
+    }
+    public void setDistanceParcourue(int distanceParcourue) {
+        this.distanceParcourue = distanceParcourue;
+    }
+
     public int getId() {
         return id;
     }
-
-    // Setter pour ID
     public void setId(int id) {
         this.id = id;
     }
+
+    public VehiculeType getTypeDeVehicule() {
+        return typeDeVehicule;
+    }
+    public void setTypeDeVehicule(VehiculeType typeDeVehicule) {
+        this.typeDeVehicule = typeDeVehicule;
+    }
+    //
 
     @Override
     public double calculImpact() {
@@ -69,19 +77,5 @@ public class Transport extends Consumption {
         super.setStartDate(startDate);
     }
 
-    public double getDistanceParcourue() {
-        return distanceParcourue;
-    }
 
-    public void setDistanceParcourue(double distanceParcourue) {
-        this.distanceParcourue = distanceParcourue;
-    }
-
-    public VehiculeType getTypeDeVehicule() {
-        return typeDeVehicule;
-    }
-
-    public void setTypeDeVehicule(VehiculeType typeDeVehicule) {
-        this.typeDeVehicule = typeDeVehicule;
-    }
 }
