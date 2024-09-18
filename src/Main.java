@@ -5,109 +5,199 @@ import enums.VehiculeType;
 import models.Alimentation;
 import models.Logement;
 import models.Transport;
-import services.AlimentationService;
 import services.LogementService;
 import services.TransportService;
+import services.AlimentationService;
 import services.UserService;
 
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class Main {
+    public static final String RESET = "\033[0m";
     public static void main(String[] args) {
-//        UserService userService = new UserService();
 
-//        // Supprimer un utilisateur
-//        if (userService.removeUser("USER123")) {
-//            System.out.println("Utilisateur supprimé avec succès.");
-//        }
+        Scanner scanner = new Scanner(System.in);
+        UserService userService = new UserService();
+        TransportService transportService = new TransportService();
+        AlimentationService alimentationService = new AlimentationService();
+        LogementService logementService = new LogementService();
 
-        // Ajouter des utilisateurs à la base de données
-//        if (userService.addUser("John Doe", 25, "USER123")) {
-//            System.out.println("Utilisateur ajouté avec succès.");
-//        }
+        while (true) {
+            System.out.println("=======================================");
+            System.out.println("      Carbon Consumption Manager");
+            System.out.println("=======================================");
+            System.out.println("1. Create User");
+            System.out.println("2. Update User");
+            System.out.println("3. Delete User");
+            System.out.println("4. Add Carbon Consumption for Transport");
+            System.out.println("5. Add Carbon Consumption for Alimentation");
+            System.out.println("6. Add Carbon Consumption for Logement");
+            System.out.println("7. Users with 3000 KgCO2eq Consumption");
+            System.out.println("8. Inactive Users");
+            System.out.println("9. Sort Users by Total Consumption");
+            System.out.println("10. Exit");
+            System.out.println("=======================================");
+            System.out.print("Please choose an option (1-10): ");
 
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-//        // Définir les données pour un transport
-//        double consumption = 126.34;
-//        LocalDateTime startDate = LocalDateTime.of(2024, 9, 13, 10, 0);
-//        LocalDateTime endDate = LocalDateTime.of(2024, 9, 13, 15, 0);
-//        ConsumptionType consumptionType = ConsumptionType.TRANSPORT;
-//        String userId = "USER123";  // Exemple d'ID utilisateur
-//        int distanceParcourue = 200;  // Distance parcourue
-//        VehiculeType typeDeVehicule = VehiculeType.TRAIN;  // Type de véhicule
-//
-//        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
-//        Transport transport = new Transport(consumption, startDate, endDate, consumptionType, userId, distanceParcourue, typeDeVehicule);
+            switch (choice) {
+                case 1:
+                    System.out.println("\n--- Create User ---");
+                    System.out.print("Enter username: ");
+                    String name = scanner.nextLine();
+                    System.out.print("Enter age: ");
+                    int age = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Enter ID: ");
+                    String id = scanner.nextLine();
+                    userService.addUser(name, age, id);
+                    System.out.println("User added successfully.\n");
+                    break;
+                case 2:
+                    System.out.println("\n--- Update User ---");
+                    System.out.print("Enter user ID to modify: ");
+                    id = scanner.nextLine();
+                    System.out.print("Enter new username: ");
+                    name = scanner.nextLine();
+                    System.out.print("Enter new age: ");
+                    age = scanner.nextInt();
+                    scanner.nextLine();
+                    userService.updateUser(id, name, age);
+                    System.out.println("User updated successfully.\n");
+                    break;
+                case 3:
+                    System.out.println("\n--- Delete User ---");
+                    System.out.print("Enter user ID to delete: ");
+                    id = scanner.nextLine();
+                    userService.removeUser(id);
+                    System.out.println("User deleted successfully.\n");
+                    break;
+                case 4:
+                    addTransport(scanner, transportService);
+                    break;
+                case 5:
+                    addAlimentation(scanner, alimentationService);
+                    break;
+                case 6:
+                    addLogement(scanner, logementService);
+                    break;
+                case 7:
+                    userService.displayUsersExceedingConsumptionThreshold();
+                    break;
+                case 8:
+                    System.out.print("Enter start date (YYYY-MM-DD): ");
+                    LocalDateTime startDateInac = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+                    System.out.print("Enter end date (YYYY-MM-DD): ");
+                    LocalDateTime endDateInac = LocalDateTime.parse(scanner.nextLine() + "T23:59:59");
+                    userService.displayInactiveUsers(startDateInac, endDateInac);
+                    break;
+                case 9:
+                    userService.triUsersByTotalConsumption();
+                    break;
+                case 10:
+                    System.out.println("Exiting... Thank you for using the Carbon Consumption Manager.");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 10.");
+                    break;
+            }
+        }
+    }
 
+    private static void addTransport(Scanner scanner, TransportService transportService) {
+        System.out.println("\n--- Add Transport Carbon Consumption ---");
+        System.out.print("Enter user ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter carbon consumption (kg CO2): ");
+        double consumption = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        System.out.print("Enter end date (YYYY-MM-DD): ");
+        LocalDateTime endDate = LocalDateTime.parse(scanner.nextLine() + "T23:59:59");
+        System.out.print("Enter distance parcourue (km): ");
+        int distanceParcourue = scanner.nextInt();
+        scanner.nextLine();
 
-//        //     Définir les données pour un transport
-//        double Updatedconsumption = 890.5;
-//        LocalDateTime UpdatedstartDate = LocalDateTime.of(2024, 10, 10, 00, 0);
-//        LocalDateTime UpdatedendDate = LocalDateTime.of(2024, 11, 11, 00, 0);
-//        ConsumptionType UpdatedconsumptionType = ConsumptionType.TRANSPORT;
-//        String UpdateduserId = "USER123";  // Exemple d'ID utilisateur
-//        int UpdateddistanceParcourue = 150;  // Distance parcourue
-//        VehiculeType UpdatedtypeDeVehicule = VehiculeType.VOITURE;  // Type de véhicule
-//
-//        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
-//        Transport Updatedtransport = new Transport(0, Updatedconsumption, UpdatedstartDate, UpdatedendDate, UpdatedconsumptionType, UpdateduserId, UpdateddistanceParcourue, UpdatedtypeDeVehicule);
+        VehiculeType typeDeVehicule = null;
+        while (typeDeVehicule == null) {
+            System.out.print("Enter vehicle type (VOITURE or TRAIN): ");
+            String vehicleTypeInput = scanner.nextLine().toUpperCase();
+            if (vehicleTypeInput.equals("VOITURE") || vehicleTypeInput.equals("TRAIN")) {
+                typeDeVehicule = VehiculeType.valueOf(vehicleTypeInput);
+            } else {
+                System.out.println("Invalid vehicle type. Please enter 'VOITURE' or 'TRAIN'.");
+            }
+        }
 
-//        TransportService transportService = new TransportService();
-//        transportService.addTransport(transport);
-//        transportService.updateTransport(1, Updatedtransport);
-//        transportService.deleteTransport(2);
-//        transportService.displayTransportById(2);
+        Transport transport = new Transport(consumption, startDate, endDate, ConsumptionType.TRANSPORT, id, distanceParcourue, typeDeVehicule);
+        transportService.addTransport(transport);
+        System.out.println("Transport consumption added successfully.\n");
+    }
 
-//      //   Définir les données pour un transport
-//        double Updateconsumption = 290;
-//        LocalDateTime UpdatestartDate = LocalDateTime.of(2024, 9, 13, 10, 0);
-//        LocalDateTime UpdateendDate = LocalDateTime.of(2024, 9, 13, 15, 0);
-//        ConsumptionType UpdateconsumptionType = ConsumptionType.LOGEMENT;
-//        String userId = "USER123";  // Exemple d'ID utilisateur
-//        double Updateconsommation_energie = 900;  // Distance parcourue
-//        EnergyType UpdatetypeEnergy = EnergyType.GAZ;  // Type de véhicule
-////
-////        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
-//        Logement Updatelogement = new Logement(Updateconsumption, UpdatestartDate, UpdateendDate, UpdateconsumptionType, userId, Updateconsommation_energie, UpdatetypeEnergy);
+    private static void addAlimentation(Scanner scanner, AlimentationService alimentationService) {
+        System.out.println("\n--- Add Alimentation Carbon Consumption ---");
+        System.out.print("Enter user ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter carbon consumption (kg CO2): ");
+        double consumption = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        System.out.print("Enter end date (YYYY-MM-DD): ");
+        LocalDateTime endDate = LocalDateTime.parse(scanner.nextLine() + "T23:59:59");
+        System.out.print("Enter weight (kg): ");
+        double weight = scanner.nextDouble();
+        scanner.nextLine();
 
-//        TransportService transportService = new TransportService();
-//        transportService.addTransport(transport);
-//        transportService.updateTransport(1, Updatedtransport);
-//        transportService.deleteTransport(5);
-//        transportService.displayTransportById(2);
+        AlimentType alimentType = null;
+        while (alimentType == null) {
+            System.out.print("Enter aliment type (VIANDE or LEGUME): ");
+            String alimentTypeInput = scanner.nextLine().toUpperCase();
+            if (alimentTypeInput.equals("VIANDE") || alimentTypeInput.equals("LEGUME")) {
+                alimentType = AlimentType.valueOf(alimentTypeInput);
+            } else {
+                System.out.println("Invalid aliment type. Please enter 'VIANDE' or 'LEGUME'.");
+            }
+        }
 
-//       LogementService logementService = new LogementService();
-//        logementService.addLogement(Updatelogement);
-//        logementService.updateLogement(2, Updatelogement);
-//        logementService.displayLogementById(7);
+        Alimentation alimentation = new Alimentation(consumption, startDate, endDate, ConsumptionType.ALIMENTATION, id, alimentType, weight);
+        alimentationService.addAlimentation(alimentation);
+        System.out.println("Alimentation consumption added successfully.\n");
+    }
 
+    private static void addLogement(Scanner scanner, LogementService logementService) {
+        System.out.println("\n--- Add Logement Carbon Consumption ---");
+        System.out.print("Enter user ID: ");
+        String id = scanner.nextLine();
+        System.out.print("Enter carbon consumption (kg CO2): ");
+        double consumption = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.print("Enter start date (YYYY-MM-DD): ");
+        LocalDateTime startDate = LocalDateTime.parse(scanner.nextLine() + "T00:00:00");
+        System.out.print("Enter end date (YYYY-MM-DD): ");
+        LocalDateTime endDate = LocalDateTime.parse(scanner.nextLine() + "T23:59:59");
+        System.out.print("Enter energy consumption (kWh): ");
+        double energyConsumption = scanner.nextDouble();
+        scanner.nextLine();
 
-//        // Définir les données pour un alimentation
-//        double consumption = 126.34;
-//        LocalDateTime startDate = LocalDateTime.of(2024, 12, 12, 12, 12);
-//        LocalDateTime endDate = LocalDateTime.of(2024, 12, 19, 12, 12);
-//        ConsumptionType consumptionType = ConsumptionType.ALIMENTATION;
-//        String userId = "USER123";  // Exemple d'ID utilisateur
-//        double weight = 18.7;  // Distance parcourue
-//        AlimentType alimentation_type = AlimentType.LEGUME;  // Type de véhicule
-//
-//        // Créer un objet Transport sans spécifier l'ID (le repository s'en occupera)
-//        Alimentation alimentation = new Alimentation(consumption, startDate, endDate, consumptionType, userId, alimentation_type, weight);
+        EnergyType energyType = null;
+        while (energyType == null) {
+            System.out.print("Enter energy type (ELECTRICITE or GAZ): ");
+            String energyTypeInput = scanner.nextLine().toUpperCase();
+            if (energyTypeInput.equals("ELECTRICITE") || energyTypeInput.equals("GAZ")) {
+                energyType = EnergyType.valueOf(energyTypeInput);
+            } else {
+                System.out.println("Invalid energy type. Please enter 'ELECTRICITE' or 'GAZ'.");
+            }
+        }
 
-//        double Updateconsumption = 12.12;
-//        LocalDateTime UpdatestartDate = LocalDateTime.of(2024, 12, 12, 12, 12);
-//        LocalDateTime UpdateendDate = LocalDateTime.of(2024, 12, 19, 12, 12);
-//        ConsumptionType UpdateconsumptionType = ConsumptionType.ALIMENTATION;
-//        String userId = "USER123";  // Exemple d'ID utilisateur
-//        double Updateweight = 500;  // Distance parcourue
-//        AlimentType Updatealimentation_type = AlimentType.VIANDE;  // Type de véhicule
-//
-//        Alimentation updateAlimentation = new Alimentation(Updateconsumption, UpdatestartDate, UpdateendDate, UpdateconsumptionType, userId, Updatealimentation_type, Updateweight);
-
-//        AlimentationService alimentationService = new AlimentationService();
-//        alimentationService.addAlimentation(alimentation);
-//        alimentationService.updateAlimentation(8,updateAlimentation);
-//          alimentationService.deleteAlimentation(9);
-//        alimentationService.displayAlimentationById(9);
+        Logement logement = new Logement(consumption, startDate, endDate, ConsumptionType.LOGEMENT, id, energyConsumption, energyType);
+        logementService.addLogement(logement);
+        System.out.println("Logement consumption added successfully.\n");
     }
 }

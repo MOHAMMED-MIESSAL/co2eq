@@ -53,7 +53,6 @@ public class LogementRepository {
             pstmtLogement.setString(3, logement.getEnergyType().name());
 
             int rowsAffectedLogement = pstmtLogement.executeUpdate();
-            System.out.println("Consommation Logement ajoutée avec succès !");
             return rowsAffectedLogement > 0;
 
         } catch (SQLException e) {
@@ -114,8 +113,6 @@ public class LogementRepository {
             pstmtLogement.setInt(3, id);  // Utilisation du paramètre id pour la mise à jour
 
             int rowsAffectedTransport = pstmtLogement.executeUpdate();
-
-            System.out.println("Enregistrement modifier avec succes !");
             return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
 
         } catch (SQLException e) {
@@ -156,7 +153,6 @@ public class LogementRepository {
             pstmtConsumption.setInt(1, id);
             int rowsAffectedConsumption = pstmtConsumption.executeUpdate();
 
-            System.out.println("Enregistrement supprimé avec succès !");
             return rowsAffectedConsumption > 0 && rowsAffectedLogement > 0;
 
         } catch (SQLException e) {

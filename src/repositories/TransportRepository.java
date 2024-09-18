@@ -57,7 +57,6 @@ public class TransportRepository {
             pstmtTransport.setString(3, transport.getTypeDeVehicule().name());
 
             int rowsAffectedTransport = pstmtTransport.executeUpdate();
-            System.out.println("Consommation Transport ajoutée avec succès !");
             return rowsAffectedTransport > 0;
 
         } catch (SQLException e) {
@@ -120,7 +119,6 @@ public class TransportRepository {
 
             int rowsAffectedTransport = pstmtTransport.executeUpdate();
 
-            System.out.println("Enregistrement modifier avec succes !");
             return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
 
         } catch (SQLException e) {
@@ -161,7 +159,6 @@ public class TransportRepository {
             pstmtConsumption.setInt(1, id);
             int rowsAffectedConsumption = pstmtConsumption.executeUpdate();
 
-            System.out.println("Enregistrement supprimé avec succès !");
             return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
 
         } catch (SQLException e) {

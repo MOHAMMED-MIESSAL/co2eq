@@ -4,6 +4,7 @@ public class User {
     private String name;
     private int age;
     private String id;
+    private double totalConsumption;
 
     public User(String name, int age, String id) {
         this.name = name;
@@ -21,5 +22,10 @@ public class User {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-
+    public double getTotalConsumption() {
+        return totalConsumption;
+    }
+    public void setTotalConsumption(double totalConsumption) {
+        this.totalConsumption = totalConsumption;
+    }
 }

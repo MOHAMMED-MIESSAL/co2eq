@@ -3,9 +3,7 @@ package repositories;
 import config.DatabaseConnection;
 import enums.AlimentType;
 import enums.ConsumptionType;
-import enums.EnergyType;
 import models.Alimentation;
-
 
 import java.sql.*;
 import java.util.Optional;
@@ -55,7 +53,6 @@ public class AlimentationRepository {
             pstmtAlimentation.setString(3, alimentation.getAlimentType().name());
 
             int rowsAffectedAlimentation = pstmtAlimentation.executeUpdate();
-            System.out.println("Consommation Logement ajoutée avec succès !");
             return rowsAffectedAlimentation > 0;
 
         } catch (SQLException e) {
@@ -92,7 +89,6 @@ public class AlimentationRepository {
         return Optional.empty();
     }
 
-
     public boolean updateAlimentation(int id, Alimentation alimentation) {
         String updateConsumptionSql = "UPDATE consumptions SET consumption = ?, start_date = ?, end_date = ?, type = ?::consumption_type, user_id = ? WHERE id = ?";
         String updateAlimentationSql = "UPDATE alimentation SET weight = ?, aliment_type = ?::aliment_type WHERE id = ?";
@@ -118,7 +114,6 @@ public class AlimentationRepository {
 
             int rowsAffectedTransport = pstmtAlimentation.executeUpdate();
 
-            System.out.println("Enregistrement modifier avec succes !");
             return rowsAffectedConsumption > 0 && rowsAffectedTransport > 0;
 
         } catch (SQLException e) {
@@ -159,7 +154,6 @@ public class AlimentationRepository {
             pstmtConsumption.setInt(1, id);
             int rowsAffectedConsumption = pstmtConsumption.executeUpdate();
 
-            System.out.println("Enregistrement supprimé avec succès !");
             return rowsAffectedConsumption > 0 && rowsAffectedLogement > 0;
 
         } catch (SQLException e) {
